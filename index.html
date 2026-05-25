@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setl Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="components/buttons.css">
+  <style>
+    @font-face {
+      font-family: 'TT Commons Pro';
+      src: url('Fonts/TT_Commons_Pro_Expanded_Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'TT Commons Pro';
+      src: url('Fonts/TT_Commons_Pro_Expanded_DemiBold.otf') format('opentype');
+      font-weight: 600;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'TT Commons Pro';
+      src: url('Fonts/TT_Commons_Pro_Expanded_Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --red:   #E8433D;
+      --black: #1C1C1C;
+      --gray2: #a09890;
+      --bg:    #ffffff;
+      --surf:  #EFEFED;
+    }
+
+    body {
+      font-family: 'TT Commons Pro', sans-serif;
+      background: var(--surf);
+      color: var(--black);
+      overflow-x: hidden;
+    }
+
+    /* ─── HEADER ──────────────────────────────────── */
+    header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      padding: 0 96px;
+      background: rgba(239,239,237,0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 100;
+    }
+
+    .logo { height: 60px; width: auto; display: block; flex: 0 0 auto; }
+
+    nav {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .header-right { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+
+    .phone {
+      font-family: 'TT Commons Pro', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--black);
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+
+    .phone:hover { color: var(--red); }
+
+    /* Кнопка «Обратный звонок» — Stroke */
+    .btn-pixel {
+      position: relative;
+      padding: 10px 22px;
+      background: transparent;
+      color: var(--black);
+      border: 1.5px solid var(--black);
+      font-family: 'TT Commons Pro', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .btn-pixel > span { position: relative; z-index: 1; pointer-events: none; }
+    .btn-pixel canvas {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 55fr 45fr;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Левая колонка: H1 + большой канвас */
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      padding: 102px 32px 52px 96px;
+      min-height: 0;
+      min-width: 0;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-family: 'TT Commons Pro', sans-serif;
+      font-size: clamp(34px, 4.6vw, 71px);
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      opacity: 0;
+      animation: fadeUp 0.75s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;
+    }
+
+    #canvas3d {
+      display: block;
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.5s forwards;
+    }
+
+    /* Правая колонка: 4 якоря с равными промежутками */
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 102px 96px 52px 32px;
+      min-width: 0;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeUp 0.75s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+    }
+
+    /* Блок H2 + описание */
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .hero-h2 {
+      font-family: 'TT Commons Pro', sans-serif;
+      font-size: clamp(20px, 2.4vw, 36px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--black);
+    }
+
+    .hero-desc {
+      font-family: 'TT Commons Pro', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--gray2);
+    }
+
+    /* Кнопки */
+    .btn-row { display: flex; align-items: center; gap: 10px; }
+    .btn-row .btn-primary,
+    .btn-row .btn-stroke { flex: 1; min-width: 0; justify-content: space-between; }
+
+    /* ─── VIDEO PLACEHOLDER ───────────────────────── */
+    .video-wrap {
+      position: relative;
+      width: 320px;
+      max-width: 100%;
+      aspect-ratio: 16 / 9;
+      flex-shrink: 0;
+      background: #787472 url('video_img.png') center / cover no-repeat;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .video-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.30);
+      z-index: 0;
+    }
+
+    .video-wrap:hover,
+    .video-wrap:active {
+      transform: scale(1.10);
+    }
+
+    .video-label {
+      position: absolute;
+      top: 20px;
+      left: 22px;
+      font-family: 'TT Commons Pro', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .play-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s ease,
+                  transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1;
+    }
+
+    .play-btn svg { margin-left: 3px; }
+
+    .video-wrap:hover .play-btn,
+    .video-wrap:active .play-btn {
+      background: rgba(255, 255, 255, 0.22);
+      transform: scale(1.08);
+    }
+
+    /* ─── LOGOS STRIP ─────────────────────────────── */
+    .logos-strip {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .logos-line {
+      position: relative;
+      width: 100%;
+      height: 2px;
+      background: rgba(28,28,28,0.12);
+      margin-bottom: 14px;
+    }
+    .logos-line::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -5px;
+      width: 20%;
+      height: 5px;
+      background: rgba(28,28,28,0.12);
+      clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 100%, 0 100%);
+    }
+
+    .logos-label {
+      font-family: 'TT Commons Pro', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray2);
+      margin-bottom: 20px;
+    }
+
+    .logos-marquee {
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+    }
+    .logos-marquee:active { cursor: grabbing; }
+
+    .logos-inner {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      width: max-content;
+    }
+
+    .logos-inner img {
+      width: 120px;
+      height: 48px;
+      object-fit: contain;
+      object-position: center;
+      flex-shrink: 0;
+      opacity: 0.4;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    @keyframes fadeUp  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+
+    /* ─── TABLET (≤ 1100px) ───────────────────────── */
+    @media (max-width: 1100px) {
+      header { padding: 0 48px; }
+      .hero-left  { padding: 40px 24px 40px 48px; }
+      .hero-right { padding: 40px 48px 40px 24px; }
+
+      .hero-desc { font-size: 15px; }
+      .logos-inner img { width: 96px; height: 40px; }
+    }
+
+    /* ─── NARROW TABLET (≤ 860px) ─────────────────── */
+    @media (max-width: 860px) {
+      header { padding: 0 32px; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100svh;
+        padding-top: 64px;
+      }
+
+      .hero-left {
+        padding: 36px 32px 0 32px;
+        flex: none;
+      }
+
+      #canvas3d {
+        flex: none;
+        height: 320px;
+        margin-top: 24px;
+      }
+
+      .hero-right {
+        padding: 32px 32px 48px 32px;
+        gap: 28px;
+        justify-content: flex-start;
+      }
+    }
+
+    /* ─── MOBILE (≤ 540px) ────────────────────────── */
+    @media (max-width: 540px) {
+      header {
+        padding: 0 20px;
+        height: 56px;
+      }
+      nav    { display: none; }
+      .phone { display: none; }
+
+      .hero { padding-top: 56px; }
+
+      .hero-left  { padding: 28px 20px 0 20px; }
+      .hero-right { padding: 24px 20px 40px 20px; gap: 24px; }
+
+      #canvas3d { height: 240px; }
+
+      h1 { font-size: clamp(30px, 8.5vw, 52px); }
+      .hero-h2  { font-size: clamp(18px, 5.5vw, 28px); }
+      .hero-desc { font-size: 14px; }
+
+      .btn-row { flex-direction: column; }
+      .btn-row .btn-primary,
+      .btn-row .btn-stroke { width: 100%; }
+
+      .logos-inner img { width: 76px; height: 32px; }
+      .logos-inner { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="SetlTech-logo.svg" alt="Setl Tech" class="logo">
+  <nav>
+    <a href="#" class="nav-link">Продукты</a>
+    <a href="#" class="nav-link">О нас</a>
+    <a href="#" class="nav-link">Вакансии</a>
+  </nav>
+  <div class="header-right">
+    <a href="tel:88008888888" class="phone">8 800 888 88 88</a>
+    <button class="btn-stroke-simple"><span class="btn-label">Обратный звонок</span></button>
+  </div>
+</header>
+
+<section class="hero">
+
+  <div class="hero-left">
+    <h1>Цифровизация,<br>которая приносит<br>прибыль</h1>
+    <canvas id="canvas3d"></canvas>
+  </div>
+
+  <div class="hero-right">
+    <div class="video-wrap" role="button" aria-label="Смотреть шоурил">
+      <span class="video-label">/Showreel</span>
+      <button class="play-btn" tabindex="-1" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="white" width="18" height="18">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="hero-text">
+      <h2 class="hero-h2">Разработано застройщиком<br>для застройщиков</h2>
+      <p class="hero-desc">
+        Setl Tech разрабатывает программные решения для застройщиков —
+        от управления проектами до сквозной аналитики.
+        Инструменты, которые работают так же, как вы думаете о стройке.
+      </p>
+    </div>
+    <div class="btn-row">
+      <a href="#" class="btn-primary">
+        <span class="btn-label">Получить консультацию</span>
+        <span class="btn-icon">
+          <svg viewBox="0 0 15 15" fill="none" stroke="white" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2.5 12.5L12.5 2.5M12.5 2.5H5M12.5 2.5V10"/>
+          </svg>
+        </span>
+      </a>
+      <a href="#" class="btn-stroke">
+        <span class="btn-label">О продуктах</span>
+        <span class="btn-icon">
+          <svg viewBox="0 0 15 15" fill="none" stroke="#1C1C1C" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2.5 12.5L12.5 2.5M12.5 2.5H5M12.5 2.5V10"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+    <div class="logos-strip">
+      <div class="logos-line"></div>
+      <p class="logos-label">Доверяют ведущие застройщики России</p>
+      <div class="logos-marquee">
+        <div class="logos-inner" id="logosInner">
+          <img src="Logos_customers/logo_capital_group.png" alt="Capital Group">
+          <img src="Logos_customers/logo_lenobl.png"        alt="ЛенОблАИЖ">
+          <img src="Logos_customers/logo_soteks.png"        alt="Сотэкс">
+          <img src="Logos_customers/logo_fsk.png"           alt="ФСК">
+          <img src="Logos_customers/logo_global_vizhn.png"  alt="Глобал Вижн">
+          <img src="Logos_customers/logo_glorax.png"        alt="GloraX">
+          <img src="Logos_customers/logo_capital_group.png" alt="Capital Group" aria-hidden="true">
+          <img src="Logos_customers/logo_lenobl.png"        alt="ЛенОблАИЖ"    aria-hidden="true">
+          <img src="Logos_customers/logo_soteks.png"        alt="Сотэкс"       aria-hidden="true">
+          <img src="Logos_customers/logo_fsk.png"           alt="ФСК"          aria-hidden="true">
+          <img src="Logos_customers/logo_global_vizhn.png"  alt="Глобал Вижн"  aria-hidden="true">
+          <img src="Logos_customers/logo_glorax.png"        alt="GloraX"       aria-hidden="true">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/loaders/SVGLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/environments/RoomEnvironment.js"></script>
+<script src="components/buttons.js"></script>
+<script>
+initNavLinks();
+initButtons();
+
+/* ─── Draggable auto-scroll marquee ─── */
+(function() {
+  const wrapper = document.querySelector('.logos-marquee');
+  const inner   = document.getElementById('logosInner');
+  if (!wrapper || !inner) return;
+
+  let x = 0, dragging = false, startMX = 0, startX = 0;
+  const SPEED = 0.45;
+
+  function half() { return inner.scrollWidth / 2; }
+
+  function wrap(val) {
+    const h = half();
+    if (!h) return val;
+    val = val % h;
+    if (val > 0) val -= h;
+    return val;
+  }
+
+  (function tick() {
+    if (!dragging) {
+      x = wrap(x - SPEED);
+    }
+    inner.style.transform = `translateX(${x}px)`;
+    requestAnimationFrame(tick);
+  })();
+
+  wrapper.addEventListener('mousedown', e => {
+    dragging = true;
+    startMX  = e.clientX;
+    startX   = x;
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    x = wrap(startX + (e.clientX - startMX));
+  });
+
+  window.addEventListener('mouseup', () => { dragging = false; });
+})();
+
+// ═══════════════════════════════════
+//  THREE.JS  —  Logo 3D
+// ═══════════════════════════════════
+(function() {
+  const el = document.getElementById('canvas3d');
+  function getSize() { return { w: el.clientWidth, h: el.clientHeight }; }
+
+  const renderer = new THREE.WebGLRenderer({ canvas: el, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.sortObjects = true;
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+  camera.position.set(0, 0, 8);
+
+  // Мягкое рассеянное освещение для матовой поверхности
+  scene.add(new THREE.AmbientLight(0xffffff, 0.80));
+
+  const key = new THREE.DirectionalLight(0xfff8f4, 1.4);  // ключевой сверху-спереди
+  key.position.set(5, 9, 7);
+  scene.add(key);
+
+  const fill = new THREE.DirectionalLight(0xe8eeff, 0.55); // мягкий заполняющий
+  fill.position.set(-6, -2, 4);
+  scene.add(fill);
+
+  const rim = new THREE.DirectionalLight(0xffffff, 0.35);  // контровой сзади
+  rim.position.set(-1, 4, -9);
+  scene.add(rim);
+
+  const spot = new THREE.PointLight(0xfff0e0, 1.2, 18);    // слабый плавающий блик
+  scene.add(spot);
+
+  // Красный: лёгкий глянец чтобы смягчить видимость рёбер бевела
+  const matRed = new THREE.MeshStandardMaterial({
+    color: 0xC8201C,
+    roughness: 0.58,
+    metalness: 0.05,
+    side: THREE.FrontSide,
+  });
+
+  // Тёмный: чуть глянцевый графит
+  const matDark = new THREE.MeshStandardMaterial({
+    color: 0x1c1c1c,
+    roughness: 0.52,
+    metalness: 0.08,
+    side: THREE.FrontSide,
+  });
+
+  const materials = [matRed, matDark];
+
+  // animate2_logo.svg: viewBox 320×151
+  const SCALE = 0.014;
+  const DEPTH = 24;
+  const CX = 160, CY = 75.5;
+
+  const svgStr = `<svg viewBox="0 0 320 151" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 0C4.47716 0 0 4.47715 0 10V140.4C0 145.923 4.47715 150.4 10 150.4H140.4C145.923 150.4 150.4 145.923 150.4 140.4V98.9H141.7V137.7C141.7 139.909 139.909 141.7 137.7 141.7H12.7C10.4909 141.7 8.7 139.909 8.7 137.7V12.7C8.7 10.4909 10.4909 8.7 12.7 8.7H137.7C139.909 8.7 141.7 10.4909 141.7 12.7V30.8H150.4V10C150.4 4.47716 145.923 0 140.4 0H10Z"/>
+<path d="M292.797 68.9C292.797 64.3 296.997 62.4 301.897 62.4C306.797 62.4 310.297 65 310.297 69.8V89.3H319.197V68.5C319.197 59.7 312.697 54.8 304.997 54.8C297.297 54.8 295.197 56.8 292.897 60.4H292.397V40.5H283.897V89.3H292.797V68.9ZM181.897 48.7H199.797V40.3H154.397V48.7H172.297V89.2H181.897V48.7ZM259.197 81.6C252.597 81.6 248.297 78.2 248.297 72.2C248.297 66.2 252.597 62.8 259.197 62.8C265.797 62.8 267.097 64.3 268.897 67.2H278.497C276.297 59 268.497 54.6 259.297 54.6C250.097 54.6 239.497 60.9 239.497 72.2C239.497 83.5 248.397 89.8 259.297 89.8C270.197 89.8 276.597 85.1 278.597 76.7H269.197C267.597 79.9 263.997 81.6 259.297 81.6H259.197ZM41.7969 59.7C37.7969 59.2 30.5969 58.3 30.5969 53.8C30.5969 50.7 33.8969 48.3 41.6969 48.3C49.5969 48.3 53.5969 50.9 54.3969 55.5H64.6969C63.8969 45.6 55.1969 39.7 41.6969 39.7C28.1969 39.7 20.5969 44.9 20.5969 54.2C20.5969 63.5 32.3969 67.5 42.6969 68.8C51.0969 69.9 55.2969 70.6 55.2969 74.7C55.2969 78.8 50.9969 81.2 42.8969 81.2C33.7969 81.2 29.9969 78 29.3969 73.3H19.2969C20.3969 82.5 26.6969 89.9 43.5969 89.9C60.4969 89.9 65.6969 83.2 65.6969 75C65.6969 62.7 51.4969 61 41.8969 59.8L41.7969 59.7ZM141.797 40.5V89.2H150.497V40.5H141.797ZM134.997 63V55.4H126.197V44.6H117.797V55.3H112.297V62.9H117.797V78.1C117.797 86.9 124.497 89.4 129.497 89.4H135.397V81.1H129.797C126.497 81.1 126.097 79.9 126.097 77.8V62.9H134.897L134.997 63ZM214.797 54.6C203.897 54.6 194.897 60.9 194.897 72.2C194.897 83.5 203.797 89.8 214.797 89.8C225.797 89.8 231.297 85.6 233.797 77.9H224.497C223.097 80.5 219.197 82 214.797 82C210.397 82 204.797 79.5 203.697 74.8H234.497C234.597 74 234.697 73.1 234.697 72.2C234.697 60.9 225.797 54.6 214.897 54.6H214.797ZM203.897 68.6C205.397 64.7 209.297 62.5 214.697 62.5C220.097 62.5 224.097 64.6 225.497 68.6H203.897ZM90.0969 54.6C79.1969 54.6 70.1969 60.9 70.1969 72.2C70.1969 83.5 79.0969 89.8 90.0969 89.8C101.097 89.8 106.597 85.6 109.097 77.9H99.7969C98.3969 80.5 94.4969 82 90.0969 82C85.6969 82 80.0969 79.5 78.9969 74.8H109.797C109.897 74 109.997 73.1 109.997 72.2C109.997 60.9 101.097 54.6 90.1969 54.6H90.0969ZM79.2969 68.6C80.7969 64.7 84.6969 62.5 90.0969 62.5C95.4969 62.5 99.4969 64.6 100.897 68.6H79.2969Z"/>
+</svg>`;
+
+  const loader   = new THREE.SVGLoader();
+  const svgData  = loader.parse(svgStr);
+
+  // meshGroup центрирован так, что SVG-центр (81.5, 82) → мировой (0,0,0)
+  const meshGroup = new THREE.Group();
+  meshGroup.scale.set(SCALE, -SCALE, SCALE); // Y-flip: SVG вниз → Three.js вверх
+  meshGroup.position.set(-CX * SCALE, CY * SCALE, -(DEPTH * SCALE) / 2);
+
+  // Красный фрейм (path 0) — без бевела, скругления уже вписаны в SVG-кривые
+  // Текст (path 1) — с бевелом для объёма
+  const extOptsFrame   = { depth: DEPTH, bevelEnabled: false };
+  const extOptsLetters = { depth: DEPTH, bevelEnabled: true, bevelThickness: 3.5, bevelSize: 2.8, bevelSegments: 5 };
+
+  svgData.paths.forEach((path, i) => {
+    const mat    = materials[i] || materials[1];
+    const opts   = i === 0 ? extOptsFrame : extOptsLetters;
+    const shapes = THREE.SVGLoader.createShapes(path);
+    shapes.forEach(shape => {
+      const geo  = new THREE.ExtrudeGeometry(shape, opts);
+      meshGroup.add(new THREE.Mesh(geo, mat));
+    });
+  });
+
+  // pivotGroup — точка вращения в мировом центре (0,0,0)
+  const pivotGroup = new THREE.Group();
+  pivotGroup.add(meshGroup);
+  scene.add(pivotGroup);
+
+
+
+  function resize() {
+    const { w, h } = getSize();
+    if (!w || !h) return;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h, false);
+  }
+  resize();
+  new ResizeObserver(resize).observe(el);
+
+  let t = 0;
+  (function animate() {
+    requestAnimationFrame(animate);
+    t += 0.007;
+
+    // Изогнутая амплитуда: качание по Y, медленно меняющийся наклон X,
+    // лёгкий крен Z — ось вращения «плывёт», как в руке
+    pivotGroup.rotation.y = Math.sin(t * 0.48) * 1.01;
+    pivotGroup.rotation.x = 0.18 + Math.sin(t * 0.29) * 0.115;
+    pivotGroup.rotation.z = Math.sin(t * 0.19) * 0.046;
+
+    // Плавное орбитальное смещение — «рука» чуть двигается
+    pivotGroup.position.x = -1.0 + Math.sin(t * 0.37) * 0.14;
+    pivotGroup.position.y = Math.sin(t * 0.24) * 0.09;
+
+    // Блик движется независимо — при повороте логотипа свет «ходит» по граням
+    spot.position.set(
+      Math.sin(t * 0.31) * 5,
+      Math.cos(t * 0.22) * 3 + 2,
+      6
+    );
+
+    // Пульс красного — едва заметное "дыхание"
+    const pulse = 0.04 * Math.sin(t * 0.6);
+    matRed.color.setRGB(0.800 + pulse, 0.125, 0.110);
+
+    renderer.render(scene, camera);
+  })();
+})();
+
+</script>
+</body>
+</html>
