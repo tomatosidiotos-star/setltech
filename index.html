@@ -73,7 +73,14 @@
       left: 50%;
       transform: translateX(-50%);
     }
-    .nav-phone { display: none; }   /* телефон внутри меню — только в мобильной панели */
+    .nav-phone { display: none; }
+
+    /* «Обратный звонок» в шапке — той же высоты, что бургер (40px) */
+    header .btn-stroke-simple {
+      height: 40px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }   /* телефон внутри меню — только в мобильной панели */
 
     /* Бургер: две полоски → крестик */
     .burger {
@@ -459,7 +466,7 @@
       :root { --head: 56px; }
       header { gap: 12px; }
       .logo { height: 46px; }
-      .btn-stroke-simple { padding: 9px 14px; }
+      header .btn-stroke-simple { padding: 0 14px; }
 
       .hero-left  { padding-top: 24px; }
       .hero-right { padding-top: 16px; padding-bottom: 40px; gap: 24px; }
