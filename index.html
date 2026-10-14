@@ -584,7 +584,7 @@ function studio() {
 }
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(studio(), 0.03).texture;
-scene.environmentIntensity = 1.5;
+scene.environmentIntensity = 1.1;
 
 // Мягкий ключевой свет слева сверху — лицевые плоскости светлее боковин
 const key = new THREE.DirectionalLight(0xffffff, 1.4);
@@ -601,12 +601,12 @@ scene.add(key);
 const matRed = new THREE.MeshPhysicalMaterial({
   color: 0xFFF1F1,
   transmission: 1,
-  thickness: 14,              // в единицах SVG — реальная толща рамки
+  thickness: 22,              // в единицах SVG — реальная толща рамки
   roughness: 0.25,
   ior: 1.45,
-  attenuationColor: new THREE.Color(0xF2898D),
-  attenuationDistance: 0.6,
-  specularIntensity: 1,
+  attenuationColor: new THREE.Color(0xE36A6F),
+  attenuationDistance: 0.55,   // кромка розово-красная, а не белая
+  specularIntensity: 0.55,
 });
 // Сердечник рамки: фирменный красный
 const matRedCore = new THREE.MeshStandardMaterial({
@@ -616,14 +616,14 @@ const matRedCore = new THREE.MeshStandardMaterial({
 
 // Дымчатое графитовое стекло (оболочка): тёплый серый, без синевы
 const matSmoke = new THREE.MeshPhysicalMaterial({
-  color: 0xF4F1EF,
+  color: 0xE6E2DF,
   transmission: 1,
-  thickness: 14,
+  thickness: 22,
   roughness: 0.25,
   ior: 1.45,
-  attenuationColor: new THREE.Color(0xA8A4A1),
-  attenuationDistance: 0.4,
-  specularIntensity: 1,
+  attenuationColor: new THREE.Color(0x938E8A),
+  attenuationDistance: 0.5,  // кромка дымчато-серая, без белого ореола
+  specularIntensity: 0.55,
 });
 // Сердечник букв: тёмный графит — держит читаемость надписи
 const matSmokeCore = new THREE.MeshStandardMaterial({
@@ -645,13 +645,13 @@ const svgStr = `<svg viewBox="0 0 320 151" xmlns="http://www.w3.org/2000/svg">
 // Сердечник — тот же контур, утопленный внутрь (bevelOffset < 0) и тоньше по глубине.
 const layers = [
   { // рамка
-    shell: { depth: 9, bevelEnabled: true, bevelThickness: 3.2, bevelSize: 2.4, bevelSegments: 8, curveSegments: 24 },
-    core:  { depth: 6, bevelEnabled: true, bevelThickness: 1.6, bevelSize: 1.2, bevelOffset: -2.2, bevelSegments: 4, curveSegments: 24 },
+    shell: { depth: 16, bevelEnabled: true, bevelThickness: 3.6, bevelSize: 2.4, bevelSegments: 8, curveSegments: 24 },
+    core:  { depth: 13, bevelEnabled: true, bevelThickness: 1.8, bevelSize: 1.2, bevelOffset: -2.0, bevelSegments: 4, curveSegments: 24 },
     shellMat: matRed, coreMat: matRedCore,
   },
   { // буквы
-    shell: { depth: 9, bevelEnabled: true, bevelThickness: 2.6, bevelSize: 1.6, bevelSegments: 8, curveSegments: 24 },
-    core:  { depth: 6, bevelEnabled: true, bevelThickness: 1.4, bevelSize: 1.0, bevelOffset: -2.0, bevelSegments: 4, curveSegments: 24 },
+    shell: { depth: 16, bevelEnabled: true, bevelThickness: 3.2, bevelSize: 1.8, bevelSegments: 8, curveSegments: 24 },
+    core:  { depth: 13, bevelEnabled: true, bevelThickness: 1.8, bevelSize: 1.0, bevelOffset: -1.6, bevelSegments: 4, curveSegments: 24 },
     shellMat: matSmoke, coreMat: matSmokeCore,
   },
 ];
