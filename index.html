@@ -614,20 +614,20 @@ const matRedCore = new THREE.MeshStandardMaterial({
   roughness: 0.7,
 });
 
-// Дымчатое графитовое стекло (оболочка): тёплый серый, без синевы
+// Дымчатое графитовое стекло (оболочка): почти нейтральный серый, без синевы и коричневы
 const matSmoke = new THREE.MeshPhysicalMaterial({
-  color: 0xE6E2DF,
+  color: 0xECEBEA,
   transmission: 1,
   thickness: 22,
   roughness: 0.25,
   ior: 1.45,
-  attenuationColor: new THREE.Color(0x938E8A),
+  attenuationColor: new THREE.Color(0xB3B1AF),
   attenuationDistance: 0.5,  // кромка дымчато-серая, без белого ореола
   specularIntensity: 0.55,
 });
-// Сердечник букв: тёмный графит — держит читаемость надписи
+// Сердечник букв: графитово-серый — держит читаемость надписи
 const matSmokeCore = new THREE.MeshStandardMaterial({
-  color: 0x5A5551,
+  color: 0x8A8886,
   roughness: 0.7,
 });
 
