@@ -36,6 +36,8 @@
       --gray2: #a09890;
       --bg:    #ffffff;
       --surf:  #EFEFED;
+      --pad:   clamp(20px, 5vw, 96px);   /* боковые поля страницы */
+      --head:  64px;                     /* высота шапки */
     }
 
     body {
@@ -49,11 +51,11 @@
     header {
       position: fixed;
       inset: 0 0 auto 0;
-      height: 64px;
+      height: var(--head);
       display: flex;
       align-items: center;
       gap: 48px;
-      padding: 0 96px;
+      padding: 0 var(--pad);
       background: rgba(239,239,237,0.96);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -62,6 +64,7 @@
 
     .logo { height: 60px; width: auto; display: block; flex: 0 0 auto; }
 
+    /* Меню по центру — пока хватает места; дальше встаёт в поток и уходит в бургер */
     nav {
       display: flex;
       gap: 36px;
@@ -70,6 +73,32 @@
       left: 50%;
       transform: translateX(-50%);
     }
+    .nav-phone { display: none; }   /* телефон внутри меню — только в мобильной панели */
+
+    /* Бургер: две полоски → крестик */
+    .burger {
+      display: none;
+      position: relative;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+      border: 1.5px solid var(--black);
+      border-radius: 6px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .burger span {
+      position: absolute;
+      left: 11px;
+      right: 11px;
+      height: 1.5px;
+      background: var(--black);
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+    .burger span:first-child { top: 15px; }
+    .burger span:last-child  { top: 22px; }
+    header.menu-open .burger span:first-child { transform: translateY(3.5px) rotate(45deg); }
+    header.menu-open .burger span:last-child  { transform: translateY(-3.5px) rotate(-45deg); }
 
     .header-right { display: flex; align-items: center; gap: 24px; margin-left: auto; }
 
@@ -108,10 +137,11 @@
 
     /* ─── HERO ────────────────────────────────────── */
     .hero {
-      height: 100vh;
+      min-height: 100vh;
+      min-height: 100svh;
       display: grid;
-      grid-template-columns: 55fr 45fr;
-      padding-top: 64px;
+      grid-template-columns: 52fr 48fr;
+      padding-top: var(--head);
       position: relative;
       overflow: hidden;
     }
@@ -120,7 +150,7 @@
     .hero-left {
       display: flex;
       flex-direction: column;
-      padding: 102px 32px 52px 96px;
+      padding: clamp(40px, 9vh, 102px) 32px clamp(32px, 5vh, 52px) var(--pad);
       min-height: 0;
       min-width: 0;
       overflow: hidden;
@@ -130,7 +160,7 @@
 
     h1 {
       font-family: 'TT Commons Pro', sans-serif;
-      font-size: clamp(34px, 4.6vw, 71px);
+      font-size: clamp(34px, 4.2vw, 71px);   /* «которая приносит» влезает в строку колонки */
       font-weight: 700;
       line-height: 1.0;
       letter-spacing: -0.02em;
@@ -142,8 +172,9 @@
     #canvas3d {
       display: block;
       width: 100%;
-      flex: 1;
-      min-height: 0;
+      flex: 1 1 0;
+      height: 0;          /* высоту задаёт flex: холст занимает всё место под заголовком */
+      min-height: 260px;
       margin-top: 20px;
       opacity: 0;
       animation: fadeIn 1s ease 0.5s forwards;
@@ -154,7 +185,8 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 102px 96px 52px 32px;
+      gap: clamp(28px, 4vh, 48px);   /* на низком экране блоки не слипаются */
+      padding: clamp(40px, 9vh, 102px) var(--pad) clamp(32px, 5vh, 52px) 32px;
       min-width: 0;
       overflow: hidden;
       position: relative;
@@ -188,14 +220,14 @@
     }
 
     /* Кнопки */
-    .btn-row { display: flex; align-items: center; gap: 10px; }
+    .btn-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
     .btn-row .btn-primary,
-    .btn-row .btn-stroke { flex: 1; min-width: 0; justify-content: space-between; }
+    .btn-row .btn-stroke { flex: 1 1 272px; justify-content: space-between; }
 
     /* ─── VIDEO PLACEHOLDER ───────────────────────── */
     .video-wrap {
       position: relative;
-      width: 320px;
+      width: clamp(280px, 24vw, 460px);
       max-width: 100%;
       aspect-ratio: 16 / 9;
       flex-shrink: 0;
@@ -327,69 +359,114 @@
     @keyframes fadeUp  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
 
-    /* ─── TABLET (≤ 1100px) ───────────────────────── */
-    @media (max-width: 1100px) {
-      header { padding: 0 48px; }
-      .hero-left  { padding: 40px 24px 40px 48px; }
-      .hero-right { padding: 40px 48px 40px 24px; }
-
+    /* ─── LAPTOP (≤ 1200px): меню встаёт в поток, чтобы не наезжать на телефон ─── */
+    @media (max-width: 1200px) {
+      header { gap: 32px; }
+      nav {
+        position: static;
+        transform: none;
+        margin: 0 auto;
+        gap: 28px;
+      }
+      .header-right { margin-left: 0; }
       .hero-desc { font-size: 15px; }
       .logos-inner img { width: 96px; height: 40px; }
     }
 
-    /* ─── NARROW TABLET (≤ 860px) ─────────────────── */
-    @media (max-width: 860px) {
-      header { padding: 0 32px; }
+    /* ─── TABLET (≤ 960px): меню и телефон — в панель по бургеру ─── */
+    @media (max-width: 960px) {
+      .burger { display: block; }
+      .header-right { margin-left: auto; gap: 12px; }
+      .phone { display: none; }
 
+      nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 22px;
+        padding: 28px var(--pad) 32px;
+        background: rgba(239,239,237,0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(28,28,28,0.08);
+        /* закрыто: спрятано вверх и прозрачно */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1), visibility 0s 0.35s;
+      }
+      header.menu-open nav {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
+      }
+      nav .nav-link { font-size: 15px; }
+      .nav-phone {
+        display: block;
+        margin-top: 6px;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--black);
+        text-decoration: none;
+      }
+    }
+
+    /* ─── NARROW TABLET (≤ 860px): одна колонка ─── */
+    @media (max-width: 860px) {
       .hero {
         grid-template-columns: 1fr;
-        height: auto;
-        min-height: 100svh;
-        padding-top: 64px;
+        min-height: 0;
       }
 
       .hero-left {
-        padding: 36px 32px 0 32px;
+        padding: 36px var(--pad) 0;
         flex: none;
       }
+
+      h1 { font-size: clamp(34px, 7vw, 60px); }
+      .hero-h2 { font-size: clamp(22px, 4vw, 32px); }
 
       #canvas3d {
         flex: none;
-        height: 320px;
-        margin-top: 24px;
+        height: clamp(240px, 52vw, 420px);
+        min-height: 0;
+        margin-top: 16px;
       }
 
       .hero-right {
-        padding: 32px 32px 48px 32px;
+        padding: 24px var(--pad) 48px;
         gap: 28px;
         justify-content: flex-start;
       }
+
+      .video-wrap { width: min(100%, 520px); }
     }
 
     /* ─── MOBILE (≤ 540px) ────────────────────────── */
     @media (max-width: 540px) {
-      header {
-        padding: 0 20px;
-        height: 56px;
-      }
-      nav    { display: none; }
-      .phone { display: none; }
+      :root { --head: 56px; }
+      header { gap: 12px; }
+      .logo { height: 46px; }
+      .btn-stroke-simple { padding: 9px 14px; }
 
-      .hero { padding-top: 56px; }
-
-      .hero-left  { padding: 28px 20px 0 20px; }
-      .hero-right { padding: 24px 20px 40px 20px; gap: 24px; }
-
-      #canvas3d { height: 240px; }
+      .hero-left  { padding-top: 24px; }
+      .hero-right { padding-top: 16px; padding-bottom: 40px; gap: 24px; }
 
       h1 { font-size: clamp(30px, 8.5vw, 52px); }
-      .hero-h2  { font-size: clamp(18px, 5.5vw, 28px); }
+      .hero-h2  { font-size: clamp(20px, 6vw, 28px); }
       .hero-desc { font-size: 14px; }
 
       .btn-row { flex-direction: column; }
       .btn-row .btn-primary,
-      .btn-row .btn-stroke { width: 100%; }
+      .btn-row .btn-stroke { flex: none; width: 100%; }
 
+      .logos-label { font-size: 12px; }
       .logos-inner img { width: 76px; height: 32px; }
       .logos-inner { gap: 24px; }
     }
@@ -399,14 +476,16 @@
 
 <header>
   <img src="SetlTech-logo.svg" alt="Setl Tech" class="logo">
-  <nav>
+  <nav id="siteNav">
     <a href="#" class="nav-link">Продукты</a>
     <a href="#" class="nav-link">О нас</a>
     <a href="#" class="nav-link">Вакансии</a>
+    <a href="tel:88008888888" class="nav-phone">8 800 888 88 88</a>
   </nav>
   <div class="header-right">
     <a href="tel:88008888888" class="phone">8 800 888 88 88</a>
     <button class="btn-stroke-simple"><span class="btn-label">Обратный звонок</span></button>
+    <button class="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="siteNav"><span></span><span></span></button>
   </div>
 </header>
 
@@ -482,6 +561,24 @@
 <script>
 initNavLinks();
 initButtons();
+
+/* ─── Burger menu (≤ 960px) ─── */
+(function() {
+  const header = document.querySelector('header');
+  const burger = header.querySelector('.burger');
+  const nav    = document.getElementById('siteNav');
+  const mq     = matchMedia('(max-width: 960px)');
+
+  function setOpen(open) {
+    header.classList.toggle('menu-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+  }
+  burger.addEventListener('click', () => setOpen(!header.classList.contains('menu-open')));
+  nav.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
+  document.addEventListener('click', e => { if (!header.contains(e.target)) setOpen(false); });
+  mq.addEventListener('change', () => setOpen(false));   // ушли на десктоп — панель закрыта
+})();
 
 /* ─── Draggable auto-scroll marquee ─── */
 (function() {
@@ -687,9 +784,11 @@ function resize() {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h, false);
-  // Логотип целиком помещается в кадр и на узком холсте
-  const fitW = 4.9 / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect);
-  camera.position.z = Math.max(7.5, fitW);
+  // Логотип вписан в холст любой формы: ~86% ширины и ~78% высоты (запас на покачивание)
+  const k = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const fitW = (4.7 / 0.86) / (k * camera.aspect);
+  const fitH = (2.3 / 0.78) / k;
+  camera.position.z = Math.max(fitW, fitH);
 }
 resize();
 new ResizeObserver(resize).observe(el);
