@@ -446,6 +446,12 @@
       }
 
       .video-wrap { width: min(100%, 520px); }
+
+      /* В одну колонку видео опускается к кнопкам: текст → шоурил → кнопки → логотипы */
+      .hero-text    { order: 1; }
+      .video-wrap   { order: 2; }
+      .btn-row      { order: 3; }
+      .logos-strip  { order: 4; }
     }
 
     /* ─── MOBILE (≤ 540px) ────────────────────────── */
